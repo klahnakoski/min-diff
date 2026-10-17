@@ -1,2 +1,43 @@
 # min-diff
-View PR diff without the mechanical refactoring noise
+
+View GitHub PR diffs without mechanical refactoring noise.
+
+## Initial direction
+
+- **Backend**: Java service with a RefactoringMiner-backed filtering engine.
+- **Frontend**: TypeScript/React SPA for interactively toggling/removing refactoring hunks.
+
+## Backend (Java)
+
+```bash
+cd /home/runner/work/min-diff/min-diff/backend
+mvn test
+mvn package
+mvn exec:java -Dexec.mainClass=com.mindiff.Main
+```
+
+Server endpoints:
+- `GET /api/health`
+- `POST /api/filter`
+
+Example request payload for `/api/filter`:
+
+```json
+{
+  "diff": "@@ -1,2 +1,2 @@\n-old\n+new",
+  "refactorings": [
+    { "label": "Rename", "startLine": 2, "endLine": 2, "selected": true }
+  ]
+}
+```
+
+## Frontend (TypeScript + React)
+
+```bash
+cd /home/runner/work/min-diff/min-diff/frontend
+npm install
+npm run build
+npm run dev
+```
+
+The Vite dev server proxies `/api/*` requests to `http://localhost:8080`.
