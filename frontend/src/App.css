@@ -1,0 +1,85 @@
+main {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 2rem 1rem 3rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #111827;
+}
+
+h1 {
+  margin-bottom: 0.25rem;
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.subtitle {
+  margin-top: 0;
+  color: #4b5563;
+}
+
+.panel {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: #ffffff;
+}
+
+textarea,
+pre {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  background: #f9fafb;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+li + li {
+  margin-top: 0.5rem;
+}
+
+label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+small {
+  color: #6b7280;
+}
+
+button {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: white;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+.engine {
+  color: #4b5563;
+  margin-top: 0;
+}
