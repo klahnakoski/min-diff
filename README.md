@@ -10,7 +10,7 @@ View GitHub PR diffs without mechanical refactoring noise.
 ## Backend (Java)
 
 ```bash
-cd /home/runner/work/min-diff/min-diff/backend
+cd backend
 mvn test
 mvn package
 mvn exec:java -Dexec.mainClass=com.mindiff.Main
@@ -34,10 +34,16 @@ Example request payload for `/api/filter`:
 ## Frontend (TypeScript + React)
 
 ```bash
-cd /home/runner/work/min-diff/min-diff/frontend
+cd frontend
 npm install
-npm run build
 npm run dev
 ```
 
 The Vite dev server proxies `/api/*` requests to `http://localhost:8080`.
+
+To produce a production build:
+
+```bash
+cd frontend
+npm run build
+```

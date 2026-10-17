@@ -11,6 +11,8 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 public class FilterServer {
+    private record HealthResponse(String status, String engine) {}
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DiffNoiseFilter diffNoiseFilter = new DiffNoiseFilter();
     private final RefactoringMinerService refactoringMinerService = new RefactoringMinerService();
@@ -19,7 +21,7 @@ public class FilterServer {
         try {
             HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/api/health", exchange -> respond(exchange, 200,
-                "{\"status\":\"ok\",\"engine\":\"" + refactoringMinerService.engineName() + "\"}"));
+                objectMapper.writeValueAsString(new HealthResponse("ok", refactoringMinerService.engineName()))));
             server.createContext("/api/filter", this::filter);
             server.start();
             System.out.println("min-diff backend listening on http://localhost:" + port);
@@ -34,17 +36,23 @@ public class FilterServer {
             return;
         }
 
-        FilterRequest request = objectMapper.readValue(exchange.getRequestBody(), FilterRequest.class);
-        String filteredDiff = diffNoiseFilter.removeSelectedRanges(request.diff(), request.refactorings());
-        FilterResponse response = new FilterResponse(filteredDiff, refactoringMinerService.engineName());
-        respond(exchange, 200, objectMapper.writeValueAsString(response));
+        try {
+            FilterRequest request = objectMapper.readValue(exchange.getRequestBody(), FilterRequest.class);
+            String filteredDiff = diffNoiseFilter.removeSelectedRanges(request.diff(), request.refactorings());
+            FilterResponse response = new FilterResponse(filteredDiff, refactoringMinerService.engineName());
+            respond(exchange, 200, objectMapper.writeValueAsString(response));
+        } catch (IOException invalidPayload) {
+            respond(exchange, 400, "{\"error\":\"Invalid JSON payload\"}");
+        }
     }
 
     private void respond(HttpExchange exchange, int status, String body) throws IOException {
         byte[] payload = body.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json; charset=utf-8");
         exchange.sendResponseHeaders(status, payload.length);
-        exchange.getResponseBody().write(payload);
+        try (var responseBody = exchange.getResponseBody()) {
+            responseBody.write(payload);
+        }
         exchange.close();
     }
 }
